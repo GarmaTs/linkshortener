@@ -61,10 +61,7 @@ func (g *Game) newEquation() (string, int) {
 }
 
 func (g Game) checkAnswer(num int) bool {
-	if num != g.answer {
-		return false
-	}
-	return true
+	return num == g.answer
 }
 
 func StartChatServer(port string) {
@@ -136,7 +133,10 @@ func handleConn(conn net.Conn, game *Game) {
 	go clientWriter(conn, chLocal)
 
 	myReader := strings.NewReader("Welcome, input your name: ")
-	io.Copy(conn, myReader)
+	_, err := io.Copy(conn, myReader)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	who := "Anonim"
 	buf := bufio.NewScanner(conn)
