@@ -10,8 +10,11 @@ import (
 )
 
 var chMsg = make(chan string) // Канал для сообщений с консоли сервера
-func StartListening() {
-	listener, err := net.Listen("tcp", "localhost:8000")
+func StartListening(port string) {
+	if len(port) == 0 {
+		port = ":8000"
+	}
+	listener, err := net.Listen("tcp", "localhost"+port)
 	if err != nil {
 		log.Fatal(err)
 	}
