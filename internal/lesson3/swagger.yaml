@@ -22,10 +22,10 @@ components:
     Item:
       type: object
       properties:
-        id: 
+        id:
           type: integer
           format: int64
-        name: 
+        name:
           type: string
         description:
           type: string
@@ -77,13 +77,13 @@ paths:
       responses:
         200:
           description: successful operation
-          headers: 
+          headers:
             X-Expires-After:
               description: date in UTC when token expires
               schema:
                 type: string
                 format: date-time
-          content: 
+          content:
             application/json:
               schema:
                 type: string
@@ -111,7 +111,7 @@ paths:
         in: query
         description: Order object that needs to be added to the store
         required: true
-        schema: 
+        schema:
           $ref: "#/components/schemas/Order"
       responses:
         "405":
@@ -168,7 +168,7 @@ paths:
           content: {}
       security:
         - APIKeyHeader: [admin]
-    delete:      
+    delete:
       summary: Deletes an order
       operationId: DeleteOrder
       tags:
@@ -232,7 +232,7 @@ paths:
         in: query
         description: Item object that needs to be added to the store
         required: true
-        schema: 
+        schema:
           $ref: "#/components/schemas/Item"
       responses:
         "405":
@@ -325,7 +325,7 @@ paths:
           content: {}
       security:
         - APIKeyHeader: [admin]
-    delete:      
+    delete:
       summary: Deletes an item
       operationId: DeleteItem
       tags:
