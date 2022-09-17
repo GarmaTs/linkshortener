@@ -1,15 +1,39 @@
 package main
 
 import (
-	chat "github.com/GarmaTs/linkshortener/internal/lesson2/chat"
-	//timesender "github.com/GarmaTs/linkshortener/internal/lesson2/time_sender"
+	"log"
+	"net/http"
+	"time"
+
+	"github.com/GarmaTs/linkshortener/internal/lesson4/fileserver"
 )
 
 func main() {
-	// Запуск утилыты рассылки даты-времени - решение для первого пункта ДЗ
-	// timesender.StartListening(":8001")
+	fileDir := "upload"
 
-	// Запуск чата (обе утилиты одновременно не работают даже на разных портах)
-	// Решения для второго и третьего пунктов ДЗ
-	chat.StartChatServer(":8000")
+	uploadHandler := &fileserver.UploadHandler{
+		UploadDir: fileDir,
+	}
+	upSrv := &http.Server{
+		Addr:         ":80",
+		Handler:      uploadHandler,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	go func() {
+		log.Fatal(upSrv.ListenAndServe())
+	}()
+
+	fileListHander := &fileserver.FileListHander{
+		Dir: fileDir,
+	}
+	flSrv := &http.Server{
+		Addr:         ":8080",
+		Handler:      fileListHander,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	log.Fatal(flSrv.ListenAndServe())
 }
