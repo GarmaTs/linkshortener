@@ -1,39 +1,31 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-	"time"
+	"os"
 
-	"github.com/GarmaTs/linkshortener/internal/lesson4/fileserver"
+	l5 "github.com/GarmaTs/linkshortener/internal/lesson5"
 )
 
 func main() {
-	fileDir := "upload"
-
-	uploadHandler := &fileserver.UploadHandler{
-		UploadDir: fileDir,
+	cfg := l5.Config{
+		Version: "1.0.0",
+		Port:    8000,
 	}
-	upSrv := &http.Server{
-		Addr:         ":80",
-		Handler:      uploadHandler,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
+	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	app := l5.Application{
+		Config: cfg,
+		Logger: logger,
 	}
-
-	go func() {
-		log.Fatal(upSrv.ListenAndServe())
-	}()
-
-	fileListHander := &fileserver.FileListHander{
-		Dir: fileDir,
-	}
-	flSrv := &http.Server{
-		Addr:         ":8080",
-		Handler:      fileListHander,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
+	app.FillFakeItems() // Fill items with fake data
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%d", cfg.Port),
+		Handler: app.Routes(),
 	}
 
-	log.Fatal(flSrv.ListenAndServe())
+	logger.Printf("starting server on %s", srv.Addr)
+	err := srv.ListenAndServe()
+	logger.Fatal(err)
 }
