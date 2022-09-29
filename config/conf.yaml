@@ -1,0 +1,8 @@
+conf:
+  port: 4000
+  env: development
+  db:
+    dsn: "postgres://linkshortener:superPas5word@localhost/linkshortener?sslmode=disable"
+    maxOpenConns: 25
+    maxIdleConns: 25
+    maxIdleTime: "15m"

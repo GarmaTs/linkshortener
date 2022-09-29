@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	l5 "github.com/GarmaTs/linkshortener/internal/lesson5"
+	l5 "github.com/GarmaTs/linkshortener/internal/lessons/lesson5"
 )
 
 func main() {
