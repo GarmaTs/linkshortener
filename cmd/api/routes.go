@@ -15,6 +15,9 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", app.healthcheckHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/urls/:short_url", app.getFullUrlByShortUrl)
 	router.HandlerFunc(http.MethodPost, "/v1/users", app.registerUserHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/signin", app.Signin)
+
+	router.HandlerFunc(http.MethodGet, "/v1/welcome", app.Welcome)
 
 	return router
 }

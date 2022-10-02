@@ -2,11 +2,71 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/GarmaTs/linkshortener/internal/data"
 	"github.com/GarmaTs/linkshortener/internal/validator"
+	"github.com/google/uuid"
 )
+
+func (app *application) Welcome(w http.ResponseWriter, r *http.Request) {
+	session, err := app.checkAuthorization(w, r)
+	if err != nil {
+		app.invalidCredentialResponse(w, r)
+		return
+	}
+
+	_, err = w.Write([]byte(fmt.Sprintf("Welcome %s!", session.Username)))
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+}
+
+func (app *application) Signin(w http.ResponseWriter, r *http.Request) {
+	var creds struct {
+		Username string `json:"name"`
+		Password string `json:"password"`
+	}
+
+	err := app.readJSON(w, r, &creds)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	u, err := app.models.Users.GetByName(creds.Username)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	match, err := u.Password.Matches(creds.Password)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+	if !match {
+		app.invalidCredentialResponse(w, r)
+		return
+	}
+
+	sessionToken := uuid.NewString()
+	expiresAt := time.Now().Add(120 * time.Second)
+	s := app.models.Sessions.Set(sessionToken, u.Name, expiresAt)
+	if s.Username == "" {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "session_token",
+		Value:   sessionToken,
+		Expires: expiresAt,
+	})
+}
 
 func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
@@ -47,6 +107,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		}
 		return
 	}
+
 	err = app.writeJSON(w, http.StatusCreated, envelope{"user": user}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)

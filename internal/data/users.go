@@ -110,7 +110,7 @@ func (m UserModel) Insert(user *User) error {
 func (m UserModel) GetByName(name string) (*User, error) {
 	query := `
 		select id, created_at, name, email, password_hash
-		from public.users where email = $1`
+		from public.users where name = $1`
 	var user User
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
