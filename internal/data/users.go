@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	ErrDuplicateEmail = errors.New("duplicate email")
+	ErrDuplicateName = errors.New("duplicate name")
 )
 
 type User struct {
@@ -96,8 +96,9 @@ func (m UserModel) Insert(user *User) error {
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&user.ID, &user.CreatedAt)
 	if err != nil {
 		switch {
-		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
-			return ErrDuplicateEmail
+		case err.Error() == `pq: duplicate key value violates unique constraint "users_name_key"`:
+		case err.Error() == `pq: повторяющееся значение ключа нарушает ограничение уникальности "users_name_key"`:
+			return ErrDuplicateName
 		default:
 			return err
 		}
@@ -141,7 +142,6 @@ func (m UserModel) Update(user *User) error {
 		where id = $3
 		returning id`
 	args := []interface{}{
-		user.Name,
 		user.Email,
 		user.Password.hash,
 		user.ID,
@@ -152,8 +152,9 @@ func (m UserModel) Update(user *User) error {
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&user.ID)
 	if err != nil {
 		switch {
-		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
-			return ErrDuplicateEmail
+		case err.Error() == `pq: duplicate key value violates unique constraint "users_name_key"`:
+		case err.Error() == `pq: повторяющееся значение ключа нарушает ограничение уникальности "users_name_key"`:
+			return ErrDuplicateName
 		case errors.Is(err, sql.ErrNoRows):
 			return ErrEditConflict
 		default:
