@@ -47,3 +47,8 @@ func (app *application) invalidCredentialResponse(w http.ResponseWriter, r *http
 	msg := "invalid authentication credentials"
 	app.errorResponse(w, r, http.StatusUnauthorized, msg)
 }
+
+func (app *application) unauthorizedResponse(w http.ResponseWriter, r *http.Request) {
+	msg := "unauthorized response"
+	app.errorResponse(w, r, http.StatusUnauthorized, msg)
+}

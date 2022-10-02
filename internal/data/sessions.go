@@ -49,3 +49,10 @@ func (sm *SessionModel) Get(token string) (Session, error) {
 
 	return userSession, nil
 }
+
+func (sm *SessionModel) Remove(token string) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+
+	delete(sm.sessions, token)
+}

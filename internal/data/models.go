@@ -21,12 +21,18 @@ type Models struct {
 	Sessions interface {
 		Set(token string, username string, expiry time.Time) Session
 		Get(token string) (Session, error)
+		Remove(token string)
+	}
+	Urls interface {
+		Insert(url *Url, userName, fullUrl string) error
+		GetOne(url *Url, shortUrl string) error
 	}
 }
 
-func NewModels(db *sql.DB, sessionz map[string]Session) Models {
+func NewModels(db *sql.DB, sessions map[string]Session) Models {
 	return Models{
 		Users:    UserModel{DB: db},
-		Sessions: &SessionModel{sessions: sessionz},
+		Sessions: &SessionModel{sessions: sessions},
+		Urls:     UrlModel{DB: db},
 	}
 }

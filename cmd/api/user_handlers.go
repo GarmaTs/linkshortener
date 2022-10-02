@@ -12,9 +12,9 @@ import (
 )
 
 func (app *application) Welcome(w http.ResponseWriter, r *http.Request) {
-	session, err := app.checkAuthorization(w, r)
+	session, _, err := app.checkAuthorization(w, r)
 	if err != nil {
-		app.invalidCredentialResponse(w, r)
+		app.unauthorizedResponse(w, r)
 		return
 	}
 
@@ -23,6 +23,19 @@ func (app *application) Welcome(w http.ResponseWriter, r *http.Request) {
 		app.serverErrorResponse(w, r, err)
 		return
 	}
+}
+
+func (app *application) LogOut(w http.ResponseWriter, r *http.Request) {
+	_, token, err := app.checkAuthorization(w, r)
+	if err != nil {
+		return
+	}
+	app.models.Sessions.Remove(token)
+	http.SetCookie(w, &http.Cookie{
+		Name:    "session_token",
+		Value:   "",
+		Expires: time.Now(),
+	})
 }
 
 func (app *application) Signin(w http.ResponseWriter, r *http.Request) {

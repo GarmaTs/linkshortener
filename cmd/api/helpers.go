@@ -85,21 +85,21 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 	return nil
 }
 
-func (app *application) checkAuthorization(w http.ResponseWriter, r *http.Request) (data.Session, error) {
+func (app *application) checkAuthorization(w http.ResponseWriter, r *http.Request) (data.Session, string, error) {
 	var session data.Session
 
 	c, err := r.Cookie("session_token")
 	if err != nil {
 		if err == http.ErrNoCookie {
-			return session, data.ErrUnauthorized
+			return session, "", data.ErrUnauthorized
 		}
-		return session, data.ErrUnauthorized
+		return session, "", data.ErrUnauthorized
 	}
 	token := c.Value
 
 	session, err = app.models.Sessions.Get(token)
 	if err != nil {
-		return session, data.ErrUnauthorized
+		return session, "", data.ErrUnauthorized
 	}
-	return session, nil
+	return session, token, nil
 }
