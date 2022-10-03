@@ -42,3 +42,13 @@ func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Reques
 func (app *application) failedValidationResponse(w http.ResponseWriter, r *http.Request, errors map[string]string) {
 	app.errorResponse(w, r, http.StatusUnprocessableEntity, errors)
 }
+
+func (app *application) invalidCredentialResponse(w http.ResponseWriter, r *http.Request) {
+	msg := "invalid authentication credentials"
+	app.errorResponse(w, r, http.StatusUnauthorized, msg)
+}
+
+func (app *application) unauthorizedResponse(w http.ResponseWriter, r *http.Request) {
+	msg := "unauthorized response"
+	app.errorResponse(w, r, http.StatusUnauthorized, msg)
+}
