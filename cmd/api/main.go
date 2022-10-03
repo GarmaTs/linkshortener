@@ -84,7 +84,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(cfg)
+
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
 
 	db, err := openDB(cfg)
@@ -93,11 +93,10 @@ func main() {
 	}
 	defer db.Close()
 	logger.Printf("database connection pool established")
-	sessions := make(map[string]data.Session)
 	app := &application{
 		config: *cfg,
 		logger: logger,
-		models: data.NewModels(db, sessions),
+		models: data.NewModels(db),
 	}
 
 	srv := &http.Server{
