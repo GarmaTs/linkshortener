@@ -15,7 +15,6 @@ type envelope map[string]interface{}
 
 func (app *application) readShortUrlParam(r *http.Request) (string, error) {
 	params := httprouter.ParamsFromContext(r.Context())
-
 	shortUrl := params.ByName("short_url")
 	if len(shortUrl) == 0 {
 		return "", errors.New("invalid shortUrl parameter")
@@ -87,7 +86,6 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 
 func (app *application) checkAuthorization(w http.ResponseWriter, r *http.Request) (data.Session, string, error) {
 	var session data.Session
-
 	c, err := r.Cookie("session_token")
 	if err != nil {
 		if err == http.ErrNoCookie {

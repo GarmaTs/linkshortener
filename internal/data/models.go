@@ -29,10 +29,26 @@ type Models struct {
 	}
 }
 
-func NewModels(db *sql.DB, sessions map[string]Session) Models {
+func NewModels(db *sql.DB) Models {
 	return Models{
-		Users:    UserModel{DB: db},
-		Sessions: &SessionModel{sessions: sessions},
-		Urls:     UrlModel{DB: db},
+		Users: UserModel{DB: db},
+		Sessions: &SessionModel{
+			sessions: make(map[string]Session),
+		},
+		Urls: UrlModel{DB: db},
+	}
+}
+
+func FakeNewModels() Models {
+	return Models{
+		Sessions: &SessionModel{
+			sessions: make(map[string]Session),
+		},
+		Users: InMemoryUserModel{
+			users: make(map[string]User),
+		},
+		Urls: InMemUrlModel{
+			urls: make(map[string]Url),
+		},
 	}
 }

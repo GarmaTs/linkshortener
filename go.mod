@@ -9,6 +9,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-require github.com/google/uuid v1.3.0
-
-require github.com/itchyny/base58-go v0.2.0 // indirect
+require (
+	github.com/google/uuid v1.3.0
+	github.com/itchyny/base58-go v0.2.0
+)

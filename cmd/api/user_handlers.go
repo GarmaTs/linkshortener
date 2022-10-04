@@ -13,6 +13,7 @@ import (
 
 func (app *application) Welcome(w http.ResponseWriter, r *http.Request) {
 	session, _, err := app.checkAuthorization(w, r)
+
 	if err != nil {
 		app.unauthorizedResponse(w, r)
 		return
@@ -108,7 +109,6 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}
-
 	err = app.models.Users.Insert(user)
 	if err != nil {
 		switch {

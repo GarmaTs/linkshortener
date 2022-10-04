@@ -7,29 +7,6 @@ import (
 	"github.com/GarmaTs/linkshortener/internal/validator"
 )
 
-func (app *application) getFullUrlByShortUrl(w http.ResponseWriter, r *http.Request) {
-	shortUrl, err := app.readShortUrlParam(r)
-	if err != nil || len(shortUrl) == 0 {
-		app.notFoundResponse(w, r)
-		return
-	}
-	url := data.Url{
-		ShortUrl: shortUrl,
-	}
-
-	err = app.models.Urls.GetOne(&url, shortUrl)
-	if err != nil {
-		app.notFoundResponse(w, r)
-		return
-	}
-
-	err = app.writeJSON(w, http.StatusOK, envelope{"url": url.FullUrl}, nil)
-	if err != nil {
-		app.serverErrorResponse(w, r, err)
-		return
-	}
-}
-
 func (app *application) addUrlByUserNameAndFullUrl(w http.ResponseWriter, r *http.Request) {
 	session, _, err := app.checkAuthorization(w, r)
 	if err != nil {
@@ -65,5 +42,28 @@ func (app *application) addUrlByUserNameAndFullUrl(w http.ResponseWriter, r *htt
 	err = app.writeJSON(w, http.StatusCreated, envelope{"url": url}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
+	}
+}
+
+func (app *application) getFullUrlByShortUrl(w http.ResponseWriter, r *http.Request) {
+	shortUrl, err := app.readShortUrlParam(r)
+	if err != nil || len(shortUrl) == 0 {
+		app.notFoundResponse(w, r)
+		return
+	}
+	url := data.Url{
+		ShortUrl: shortUrl,
+	}
+
+	err = app.models.Urls.GetOne(&url, shortUrl)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"url": url.FullUrl}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
 	}
 }
