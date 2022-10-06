@@ -3,13 +3,13 @@ services:
   web:
     build: .
     container_name: "lesson8" #specified container name which was built from Dockerfile
-    ports: 
+    ports:
       - "8080:4000"
     depends_on:
       - db
     networks:
-      - fullstack  
-  
+      - fullstack
+
   db:
     image: postgres:14.1-alpine
     restart: always
@@ -21,7 +21,7 @@ services:
       - '5432'
     networks:
       - fullstack
-    volumes: 
+    volumes:
       - db:/var/lib/postgresql/data
 
 volumes:
