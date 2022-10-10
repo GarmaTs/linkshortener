@@ -1,0 +1,33 @@
+version: '3.3'
+services:
+  web:
+    build: .
+    container_name: "lesson8" #specified container name which was built from Dockerfile
+    ports:
+      - "8080:4000"
+    depends_on:
+      - db
+    networks:
+      - fullstack
+
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=linkshortener
+      - POSTGRES_USER=linkshortener
+      - POSTGRES_PASSWORD=superPas5word
+    ports:
+      - '5432'
+    networks:
+      - fullstack
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  fullstack:
+    driver: bridge
