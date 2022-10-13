@@ -24,6 +24,7 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPost, "/signup", app.signupPost)
 	router.HandlerFunc(http.MethodGet, "/urls", app.urlsForm)
 	router.HandlerFunc(http.MethodPost, "/urls", app.urlsPost)
+	router.HandlerFunc(http.MethodPost, "/deleteurl/", app.urlsDelete)
 	router.HandlerFunc(http.MethodGet, "/links", app.linksForm)
 	router.HandlerFunc(http.MethodPost, "/logout", app.logout)
 

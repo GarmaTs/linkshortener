@@ -27,6 +27,7 @@ type Models struct {
 		Insert(url *Url, userName, fullUrl string) error
 		GetOne(url *Url, shortUrl string) error
 		GetList(username string) ([]*Url, error)
+		Delete(id int) error
 	}
 }
 

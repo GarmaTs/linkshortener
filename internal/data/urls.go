@@ -160,3 +160,24 @@ func (m UrlModel) GetList(username string) ([]*Url, error) {
 
 	return urls, nil
 }
+
+func (m UrlModel) Delete(id int) error {
+	query := `delete from public.urls where id = $1`
+
+	args := []interface{}{id}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	if err = rows.Err(); err != nil {
+		return err
+	}
+
+	return nil
+}

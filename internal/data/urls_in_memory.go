@@ -27,3 +27,8 @@ func (m InMemUrlModel) GetOne(url *Url, shortUrl string) error {
 func (m InMemUrlModel) GetList(username string) ([]*Url, error) {
 	return nil, nil
 }
+
+// Stab method
+func (m InMemUrlModel) Delete(id int) error {
+	return nil
+}

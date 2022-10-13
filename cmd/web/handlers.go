@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -186,6 +187,7 @@ func (app *application) signupPost(w http.ResponseWriter, r *http.Request) {
 }
 
 type urlsForm struct {
+	ID                  string
 	FullUrl             string `form:"full_url"`
 	validator.Validator `form:"-"`
 	Result              map[string]string
@@ -241,6 +243,30 @@ func (app *application) urlsPost(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	data.Form = form
 	app.render(w, http.StatusOK, "url_create.html", data)
+}
+
+func (app *application) urlsDelete(w http.ResponseWriter, r *http.Request) {
+	_, _, err := app.checkAuthorization(w, r)
+	if err != nil {
+		app.clientError(w, http.StatusUnauthorized)
+		return
+	}
+	var form urlsForm
+	err = app.decodePostForm(r, &form)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(form.ID)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	err = app.models.Urls.Delete(id)
+
+	http.Redirect(w, r, "/links", http.StatusSeeOther)
 }
 
 func (app *application) linksForm(w http.ResponseWriter, r *http.Request) {

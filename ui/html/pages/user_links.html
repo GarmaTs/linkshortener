@@ -9,12 +9,15 @@
                 <th>Full url</th>
                 <th>Short url</th>
                 <th>Created</th>
+                <th>Delete</th>
             </tr>
             {{range .Urls}}
-            <tr>
+            <tr id="{{.ID}}">
                 <td>{{.FullUrl}}</td>
                 <td><a href="{{.ShortUrl}}">{{.ShortUrl}}</a></td></td>
                 <td>{{humanDate .CreatedAt}}</td>
+                <td><input type="button" value="Delete" onclick="deleteUrl()" 
+                    class="btn btn-light"></td>
             </tr>
             {{end}}
         </table>
