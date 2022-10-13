@@ -1,0 +1,23 @@
+{{define "title"}}Home{{end}}
+
+{{define "main"}}
+{{template "nav" .}}
+<div class="col-xs-4">
+    {{if .Urls}}
+        <table class="table table-stripped">
+            <tr>
+                <th>Full url</th>
+                <th>Short url</th>
+                <th>Created</th>
+            </tr>
+            {{range .Urls}}
+            <tr>
+                <td>{{.FullUrl}}</td>
+                <td><a href="{{.ShortUrl}}">{{.ShortUrl}}</a></td></td>
+                <td>{{humanDate .CreatedAt}}</td>
+            </tr>
+            {{end}}
+        </table>
+    {{end}}
+</div>
+{{end}}

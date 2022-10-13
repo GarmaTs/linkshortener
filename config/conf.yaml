@@ -1,6 +1,8 @@
 conf:
   port: 4000
   env: development
+  host: http://localhost
+  short_url_prefix: /url/
   db:
     dsn: "postgres://linkshortener:superPas5word@localhost/linkshortener?sslmode=disable"
     maxOpenConns: 25

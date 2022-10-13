@@ -27,7 +27,7 @@ type Url struct {
 
 func ValidateUrl(v *validator.Validator, url *Url) {
 	v.Check(url.FullUrl != "", "full url", "must be provided")
-	v.Check(len(url.FullUrl) <= 1000, "full url", "must be at less than 1000 characters long")
+	v.Check(len(url.FullUrl) <= 1000, "full url", "must be less than 1000 characters long")
 	v.Check(strings.HasPrefix(url.FullUrl, "http"), "full url", "has wrong format")
 }
 
@@ -125,4 +125,38 @@ func (m UrlModel) GetOne(url *Url, shortUrl string) error {
 	}
 
 	return nil
+}
+
+func (m UrlModel) GetList(username string) ([]*Url, error) {
+	query :=
+		`select id, full_url, short_url, created_at from public.urls 
+		where
+			user_id in (select id from public.users where name = $1)
+		order by id desc`
+	args := []interface{}{username}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	urls := []*Url{}
+	for rows.Next() {
+		u := &Url{}
+		err = rows.Scan(&u.ID, &u.FullUrl, &u.ShortUrl, &u.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		urls = append(urls, u)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return urls, nil
 }

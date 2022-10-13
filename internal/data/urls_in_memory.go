@@ -22,3 +22,8 @@ func (m InMemUrlModel) GetOne(url *Url, shortUrl string) error {
 	url.FullUrl = u.FullUrl
 	return nil
 }
+
+// Stab method
+func (m InMemUrlModel) GetList(username string) ([]*Url, error) {
+	return nil, nil
+}
