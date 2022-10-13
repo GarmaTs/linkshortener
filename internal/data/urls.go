@@ -129,7 +129,7 @@ func (m UrlModel) GetOne(url *Url, shortUrl string) error {
 
 func (m UrlModel) GetList(username string) ([]*Url, error) {
 	query :=
-		`select id, full_url, short_url, created_at from public.urls 
+		`select id, full_url, short_url, created_at from public.urls
 		where
 			user_id in (select id from public.users where name = $1)
 		order by id desc`
