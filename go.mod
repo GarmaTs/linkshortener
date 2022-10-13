@@ -13,3 +13,5 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/itchyny/base58-go v0.2.0
 )
+
+require github.com/go-playground/form/v4 v4.2.0

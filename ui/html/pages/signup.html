@@ -1,0 +1,42 @@
+{{define "title"}}Sign Up{{end}}
+
+{{define "main"}}
+{{template "signinnav" .}}
+<div class="container">
+    <form action="/signup" method="POST">
+        <div>
+            {{with .Form.Errors.commonerr}}
+                <label class="text-danger">{{.}}</label><br>
+            {{end}}
+        </div>
+        <div>
+            <label>Name:</label><br>
+            {{with .Form.Errors.name}}
+                <label class="text-danger">{{.}}</label><br>
+            {{end}}
+            <input type="text" name="name" value="{{.Form.Name}}"><br>
+        </div>
+        <div>
+            <label>Email:</label><br>
+            {{with .Form.Errors.email}}
+                <label class="text-danger">{{.}}</label><br>
+            {{end}}
+            <input type="text" name="email" value="{{.Form.Email}}"><br>
+        </div>
+        <div>
+            <label>Password:</label><br>
+            {{with .Form.Errors.password1}}
+                <label class="text-danger">{{.}}</label><br>
+            {{end}}
+            <input type="password" name="password1"><br>
+        </div>
+        <div>
+            <label>Confirm password:</label><br>
+            <input type="password" name="password2"><br><br>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-success" value="Sign Up">
+        </div>
+    </form>
+</div>
+{{end}}

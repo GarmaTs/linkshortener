@@ -1,0 +1,26 @@
+{{define "title"}}Home{{end}}
+
+{{define "main"}}
+{{template "nav" .}}
+<div class="container">
+    <form action="/urls" method="POST">
+        <div>
+            <label>Full url:</label><br>
+            {{with .Form.Errors.full_url}}
+                <label class="text-danger">{{.}}</label><br>
+            {{end}}
+            <input type="text" name="full_url" value="{{.Form.FullUrl}}" class="form-control"><br>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-success" value="Save">
+        </div>
+        <div>
+            {{with .Form.Result.short_url}}
+                <br>
+                <label class="text-success">Saved successfully</label><br>
+                <input type="text" class="form-control" readonly value="{{.}}">
+            {{end}}
+        </div>
+    </form>
+</div>
+{{end}}
